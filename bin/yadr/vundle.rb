@@ -3,6 +3,7 @@ require 'fileutils'
 module Vundle
   @vundles_path = File.expand_path File.join(ENV['HOME'], '.vim', '.vundles.local')
   def self.add_plugin_to_vundle(plugin_repo)
+    #put "add_plugin_to_vundle \"#{vundles}\"to"
     return if contains_vundle? plugin_repo
 
     vundles = vundles_from_file
@@ -26,12 +27,13 @@ module Vundle
   end
 
   def self.update_vundle
-    system "vim --noplugin -u #{ENV['HOME']}/.vim/vundles.vim -N \"+set hidden\" \"+syntax on\" +BundleClean +BundleInstall! +qall"
+    system "vim --noplugin -u #{ENV['HOME']}/.vim/vundles.vim -N \"+set hidden\" \"+syntax on\" +BundleClean +BundleInstall +qall"
   end
 
 
   private
   def self.contains_vundle?(vundle_name)
+    puts "add_plugin_to_vundle \"#{@vundles_path}\"to"
     FileUtils.touch(@vundles_path) unless File.exists? @vundles_path
     File.read(@vundles_path).include?(vundle_name)
   end
