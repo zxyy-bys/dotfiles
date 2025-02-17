@@ -262,22 +262,23 @@ let g:gundo_right=1
 """""""""""""""""""""
 
 """""""""""""""""""""
-" => Tagbar (ctags) END
+" => Tagbar (ctags) start
 """"""""""""""""""""""
 nnoremap <silent> <F4> :TagbarToggle <cr>
 " let g:tagbar_ctags_bin = '/opt/homebrew/bin/ctags'
 " let g:tagbar_ctags_bin = '/usr/bin/ctags'
-" let g:tagbar_left = 0
+" let g:tagbar_left = 1
 let g:tagbar_position = 'botright vertical'
 let g:tagbar_width = min([30, winwidth(0) / 5])
 " let g:tagbar_width = 30
 let g:tagbar_show_visibility = 1
 let g:tagbar_show_linenumbers = 2
+let g:tagbar_highlight_method='scoped-stl'
 let g:tagbar_sort = 0
-let g:tagbar_autopreview = 0
+"let g:tagbar_autopreview = 1
+let g:airline#extensions#tagbar#flags = 'f'  " show full tag hierarchy
 "let g:tagbar_previewwin_pos = "botright"
 let g:tagbar_foldlevel = 2
-let g:tagbar_autoshowtag = 1
 """""""""""""""""""""
 " Tagbar (ctags) END
 """""""""""""""""""""
@@ -344,7 +345,9 @@ let g:syntastic_auto_loc_list = 0
  """""""""""""""""""""
  " => gitgutter  
  """"""""""""""""""""""
- set updatetime=200000
+ " set updatetime=200000
+ " this setting will affect the tagbar highlight
+ set updatetime=1000
  """""""""""""""""""""
  " => gitgutter  End
  """""""""""""""""""""
@@ -393,10 +396,6 @@ nmap <leader>cc           <Plug>NERDCommenterComment
  "colorscheme default
  "colorscheme desert
  "colorscheme default
-
- """""""""""""""""""""
- " Tagbar (ctags) END
- """"""""""""""""""""""
 
  """""""""""""""""""""
  " easymotion
@@ -641,3 +640,19 @@ let g:tagbar_type_rust = {
 " set tagfunc=CocFunc
 set tagfunc=CocTagFunc
 set maxmempattern=2000
+
+autocmd FileType c,cpp setlocal equalprg=clang-format\ -style=file
+
+let g:jedi#added_sys_path=["/home/zjlab/go/src/github.com/pytorch/pytorch"]
+
+" ccls config
+if executable('ccls')
+   au User lsp_setup call lsp#register_server({
+      \ 'name': 'ccls',
+      \ 'cmd': {server_info->['ccls']},
+      \ 'root_uri': {server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'compile_commands.json'))},
+      \ 'initialization_options': {},
+      \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp', 'cc'],
+      \ })
+endif
+let g:lsp_highlight_references_enabled=0
