@@ -571,8 +571,16 @@ inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 "let g:coc_node_path = '/opt/homebrew/bin/node'
+
+" gofmt
+autocmd FileType go nnoremap <buffer> <leader>f :Fmt<CR>
+" autocmd BufWritePre *.go !Fmt
 "
-"
+" rustfmt
+autocmd FileType rust nnoremap <buffer> <leader>f :RustFmt <CR>
+" autocmd FileType py nnoremap <leader>f :RustFmt <CR>
+" let g:rustfmt_autosave = 1
+" autocmd FileType go autocmd BufWritePre <buffer> Fmt
 
 "Use <tab> and <S-tab> to navigate completion list: >
 function! s:check_back_space() abort
@@ -594,15 +602,6 @@ inoremap <expr> <cr> coc#pum#visible() ? coc#_select_confirm() : "\<CR>"
 "coc-go
 autocmd BufWritePre *.go :silent call CocAction('runCommand', 'editor.action.organizeImport')
 
-" gofmt
-autocmd FileType go nnoremap <leader>f :Fmt<CR>
-" autocmd BufWritePre *.go !Fmt
-"
-" rustfmt
-autocmd FileType rs nnoremap <leader>f :RustFmt <CR>
-" autocmd FileType py nnoremap <leader>f :RustFmt <CR>
-" let g:rustfmt_autosave = 1
-" autocmd FileType go autocmd BufWritePre <buffer> Fmt
 let g:rust_use_custom_ctags_defs = 1  " if using rust.vim
 let g:tagbar_type_rust = {
   \ 'ctagsbin' : '/home/zjlab/code/ctags/ctags',
@@ -641,18 +640,36 @@ let g:tagbar_type_rust = {
 set tagfunc=CocTagFunc
 set maxmempattern=2000
 
-autocmd FileType c,cpp setlocal equalprg=clang-format\ -style=file
+" autocmd FileType c,cpp setlocal equalprg=clang-format\ -style=file
 
 let g:jedi#added_sys_path=["/home/zjlab/go/src/github.com/pytorch/pytorch"]
 
 " ccls config
-if executable('ccls')
-   au User lsp_setup call lsp#register_server({
-      \ 'name': 'ccls',
-      \ 'cmd': {server_info->['ccls']},
-      \ 'root_uri': {server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'compile_commands.json'))},
-      \ 'initialization_options': {},
-      \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp', 'cc'],
-      \ })
-endif
+" if executable('ccls')
+"    au User lsp_setup call lsp#register_server({
+"       \ 'name': 'ccls',
+"       \ 'cmd': {server_info->['ccls']},
+"       \ 'root_uri': {server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'compile_commands.json'))},
+"       \ 'initialization_options': {},
+"       \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp', 'cc'],
+"       \ })
+" endif
 let g:lsp_highlight_references_enabled=0
+
+" c/c++ format setting "
+packadd vim-clang-format
+" g:clang_format#code_style
+let g:clang_format#style_options = {
+            \ "AccessModifierOffset" : -4,
+            \ "AllowShortIfStatementsOnASingleLine" : "true",
+            \ "AlwaysBreakTemplateDeclarations" : "true",
+            \ "Standard" : "C++11"}
+
+" map to <Leader>cf in C++ code
+" autocmd FileType c,cpp,objc,cuda nnoremap <buffer><Leader>cf :<C-u>ClangFormat<CR>
+autocmd FileType c,cpp,objc,cuda nnoremap <buffer> <leader>f :ClangFormat<CR>
+" autocmd FileType c,cpp,objc,cuda vnoremap <buffer><Leader>fu :ClangFormat<CR>
+" if you install vim-operator-user
+" autocmd FileType c,cpp,objc,cuda map <buffer><leader>x <Plug>(operator-clang-format)
+" Toggle auto formatting:
+nmap <Leader>C :ClangFormatAutoToggle<CR>
