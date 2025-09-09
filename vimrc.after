@@ -85,7 +85,7 @@ filetype off
 "call vundle#end()            " required
 "filetype plugin indent on    " required
 " To ignore plugin indent changes, instead use:
-filetype plugin on
+filetype plugin indent on
 "
 " Brief help
 " :PluginList       - lists configured plugins
@@ -279,6 +279,44 @@ let g:tagbar_sort = 0
 let g:airline#extensions#tagbar#flags = 'f'  " show full tag hierarchy
 "let g:tagbar_previewwin_pos = "botright"
 let g:tagbar_foldlevel = 2
+
+" tagbar for rust 
+" use universal ctags
+let g:rust_use_custom_ctags_defs = 1  " if using rust.vim
+" "\ 'ctagsbin' : '/home/zjlab/code/ctags/ctags',
+let g:tagbar_type_rust = {
+  \ 'ctagsbin' : '/usr/bin/ctags',
+  \ 'ctagstype' : 'rust',
+  \ 'kinds' : [
+      \ 'n:modules',
+      \ 's:structures:1',
+      \ 'i:interfaces',
+      \ 'c:implementations',
+      \ 'f:functions:1',
+      \ 'g:enumerations:1',
+      \ 't:type aliases:1:0',
+      \ 'C:constants:1:0',
+      \ 'M:macros:1',
+      \ 'm:fields:1:0',
+      \ 'e:enum variants:1:0',
+      \ 'P:methods:1',
+  \ ],
+  \ 'sro': '::',
+  \ 'kind2scope' : {
+      \ 'n': 'module',
+      \ 's': 'struct',
+      \ 'i': 'interface',
+      \ 'c': 'implementation',
+      \ 'f': 'function',
+      \ 'g': 'enum',
+      \ 't': 'typedef',
+      \ 'v': 'variable',
+      \ 'M': 'macro',
+      \ 'm': 'field',
+      \ 'e': 'enumerator',
+      \ 'P': 'method',
+  \ },
+\ }
 """""""""""""""""""""
 " Tagbar (ctags) END
 """""""""""""""""""""
@@ -602,47 +640,13 @@ inoremap <expr> <cr> coc#pum#visible() ? coc#_select_confirm() : "\<CR>"
 "coc-go
 autocmd BufWritePre *.go :silent call CocAction('runCommand', 'editor.action.organizeImport')
 
-let g:rust_use_custom_ctags_defs = 1  " if using rust.vim
-let g:tagbar_type_rust = {
-  \ 'ctagsbin' : '/home/zjlab/code/ctags/ctags',
-  \ 'ctagstype' : 'rust',
-  \ 'kinds' : [
-      \ 'n:modules',
-      \ 's:structures:1',
-      \ 'i:interfaces',
-      \ 'c:implementations',
-      \ 'f:functions:1',
-      \ 'g:enumerations:1',
-      \ 't:type aliases:1:0',
-      \ 'C:constants:1:0',
-      \ 'M:macros:1',
-      \ 'm:fields:1:0',
-      \ 'e:enum variants:1:0',
-      \ 'P:methods:1',
-  \ ],
-  \ 'sro': '::',
-  \ 'kind2scope' : {
-      \ 'n': 'module',
-      \ 's': 'struct',
-      \ 'i': 'interface',
-      \ 'c': 'implementation',
-      \ 'f': 'function',
-      \ 'g': 'enum',
-      \ 't': 'typedef',
-      \ 'v': 'variable',
-      \ 'M': 'macro',
-      \ 'm': 'field',
-      \ 'e': 'enumerator',
-      \ 'P': 'method',
-  \ },
-\ }
 " set tagfunc=CocFunc
 set tagfunc=CocTagFunc
 set maxmempattern=2000
 
 " autocmd FileType c,cpp setlocal equalprg=clang-format\ -style=file
 
-let g:jedi#added_sys_path=["/home/zjlab/go/src/github.com/pytorch/pytorch"]
+" let g:jedi#added_sys_path=["/home/zjlab/go/src/github.com/pytorch/pytorch"]
 
 " ccls config
 " if executable('ccls')
@@ -673,3 +677,7 @@ autocmd FileType c,cpp,objc,cuda nnoremap <buffer> <leader>f :ClangFormat<CR>
 " autocmd FileType c,cpp,objc,cuda map <buffer><leader>x <Plug>(operator-clang-format)
 " Toggle auto formatting:
 nmap <Leader>C :ClangFormatAutoToggle<CR>
+
+""""" Context.vim """"""""""'
+let g:context_extend_regex = '^\s*\([]{})]\|end\|else\|case\>\|default\>\)'
+""""" Context.vim End""""""""'
